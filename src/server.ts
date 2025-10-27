@@ -6,13 +6,18 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
+import dotenv from "dotenv";
+
+dotenv.config(); 
 
 /**
  * custom modules
  */
-import config from "@/config";
+// import config from "@/config";
 
 import limiter from "@/libs/express_rate_limit";
+
+
 
 /**
  * router
@@ -31,25 +36,25 @@ import rateLimit from "express-rate-limit";
 const app = express();
 
 //configure cors options
-const corsOptions: CorsOptions = {
-  origin(origin, callback) {
-    if (
-      config.NODE_ENV === "development" ||
-      !origin ||
-      config.WHITELIST_ORIGINS.includes(origin)
-    ) {
-      callback(null, true);
-    } else {
-      callback(
-        new Error(`CORES Error: ${origin} is not allowed by CORES`),
-        false
-      );
-    }
-  },
-};
+// const corsOptions: CorsOptions = {
+//   origin(origin, callback) {
+//     if (
+//       process.env.NODE_ENV === "development" ||
+//       !origin ||
+//       process.env.WHITELIST_ORIGINS.includes(origin)
+//     ) {
+//       callback(null, true);
+//     } else {
+//       callback(
+//         new Error(`CORES Error: ${origin} is not allowed by CORES`),
+//         false
+//       );
+//     }
+//   },
+// };
 
 // apply cors middleware
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 //enable JASON request body parsing
 app.use(json());
@@ -68,12 +73,12 @@ app.use(helmet());
 (async () => {
   try {
     app.use("/api/v1", v1Routes);
-    app.listen(config.PORT, () => {
-      console.log(`Server is running at http://localhost:${config.PORT}`);
+    app.listen(process.env.PORT, () => {
+      console.log(`Server is running at http://localhost:${process.env.PORT}`);
     });
   } catch (error) {
     console.log("Failed to start server", error);
-    if (config.NODE_ENV === "production") {
+    if (process.env.NODE_ENV === "production") {
       process.exit(1);
     }
   }

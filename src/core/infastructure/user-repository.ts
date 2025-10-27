@@ -1,0 +1,1 @@
+import { CreateUserData } from "../domain/entities/user-entity";
